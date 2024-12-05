@@ -69,8 +69,8 @@ Instructions on how to build and run the project, with cross-platform installati
 
 3. Clone the repository and navigate to the project folder:
    ```bash
-   git clone https://github.com/yourusername/SnakeGame.git
-   cd SnakeGame
+   git clone git@github.com:thtan0602/Udacity-Cplusplus.git
+   Udacity C++/CppND-Capstone-Snake-Game
    ```
 
 4. Build the project using CMake:
