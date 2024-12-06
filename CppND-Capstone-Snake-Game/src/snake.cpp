@@ -85,8 +85,7 @@ Snake& Snake::operator=(Snake&& other) noexcept {
 void Snake::Update() {
   SDL_Point prev_cell{
       static_cast<int>(head_x),
-      static_cast<int>(
-          head_y)};  // We first capture the head's cell before updating.
+      static_cast<int>(head_y)};  // We first capture the head's cell before updating.
   UpdateHead();
   SDL_Point current_cell{
       static_cast<int>(head_x),
@@ -135,12 +134,25 @@ void Snake::UpdateBody(SDL_Point &current_head_cell, SDL_Point &prev_head_cell) 
     size++;
   }
 
-  // Check if the snake has died.
-  for (auto const &item : body) {
-    if (current_head_cell.x == item.x && current_head_cell.y == item.y) {
+  // // Check if the snake has collided with its own body
+  if (HasCollidedWithBody(current_head_cell)) {
       alive = false;
-    }
   }
+}
+
+// Check if the snake collides with its own body
+bool Snake::HasCollidedWithBody(SDL_Point &current_head_cell) const {
+    for (auto const &item : body) {
+        if (current_head_cell.x == item.x && current_head_cell.y == item.y) {
+            return true;  // Collision detected
+        }
+    }
+    return false;  // No collision
+}
+
+// Check if the snake collides with the enemy
+bool Snake::HasCollidedWithEnemy(SDL_Point &current_head_cell, const Enemy &enemy) const {
+    return current_head_cell.x == enemy.GetX() && current_head_cell.y == enemy.GetY();
 }
 
 Snake::Direction Snake::GetOppositeDirection(Snake::Direction dir) {

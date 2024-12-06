@@ -294,4 +294,6 @@ CMakeFiles/SnakeGame.dir/src/renderer.cpp.o: \
  /usr/include/c++/11/bits/stl_set.h \
  /usr/include/c++/11/bits/stl_multiset.h \
  /usr/include/c++/11/bits/erase_if.h /usr/include/c++/11/utility \
- /usr/include/c++/11/bits/stl_relops.h
+ /usr/include/c++/11/bits/stl_relops.h \
+ /home/tinghao/Documents/Udacity\ C++/CppND-Capstone-Snake-Game/src/enemy.h \
+ /usr/include/SDL2/SDL.h

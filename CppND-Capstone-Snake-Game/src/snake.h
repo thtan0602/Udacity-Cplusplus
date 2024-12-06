@@ -5,6 +5,7 @@
 #include <set>
 #include <utility>
 #include "SDL.h"
+#include "enemy.h"
 
 class Snake {
  public:
@@ -28,6 +29,20 @@ class Snake {
   // Getter and setter method for current_direction
   Direction& GetCurrentDirection(); 
   void SetCurrentDirection(Direction direction);
+
+  int GetGridWidth(){
+    return grid_width;
+  }
+
+  int GetGridHeight(){
+    return grid_height;
+  }
+
+  // Check if the snake collides with its own body
+  bool HasCollidedWithBody(SDL_Point &current_head_cell) const;
+
+  // Check if the snake collides with the enemy
+  bool HasCollidedWithEnemy(SDL_Point &current_head_cell, const Enemy &enemy) const;
 
   Direction direction = Direction::kUp;
 
