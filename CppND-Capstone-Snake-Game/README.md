@@ -101,6 +101,9 @@ Instructions on how to build and run the project, with cross-platform installati
 ### Locks
 - The controller and game can lock the operation during changing of direction and updating of game state  
 
+### Enemy
+- Include an enemy in enemy.hpp and enemy.cpp to increase the difficulty of the game. If the snake scores more and moves faster, the enemy will catch up as well.
+
 4. Rubric Points Addressed
 Indicate the rubric points you have addressed in your project. This helps the reviewer understand how your project aligns with the grading rubric. Also, refer to where in the code each point is addressed (e.g., filenames and line numbers).
 
@@ -108,6 +111,7 @@ Indicate the rubric points you have addressed in your project. This helps the re
 - Multithreading (see `controller.cpp`, lines 18-21, `game.cpp`, line 51-53, lines 88-90, lines 237-244)
 - Improved user experience (see `game.cpp`, lines 21-39)
 - Locks (see `controller.cpp`, line 9 and 12, `game.cpp`, line 7 and 220)
+- Enemy (see `enemy.h` and `enemy.cpp`)
 
 - README done
 - Compiling and Testing done
@@ -139,6 +143,8 @@ Provide a section that describes the expected output or behavior of the game, en
 - The player can control the snake using the arrow keys and quit using escape key.
 - The snake should grow in length when it eats food, and the game should end when the snake collides with itself or the wall.
 - New textures should be visible for the snake and food, and the game should run smoothly with no frame rate drops.
+- The enemy will move faster when the snake scores more and moves faster
+- The snake will die if it hits the enemy
 
 6. Conclusion
 A brief conclusion and any additional comments you think are important for the reviewer.
