@@ -301,7 +301,12 @@ CMakeFiles/SnakeGame.dir/src/controller.cpp.o: \
  /usr/include/c++/11/bits/stl_multiset.h \
  /usr/include/c++/11/bits/erase_if.h \
  /home/tinghao/Documents/Udacity\ C++/CppND-Capstone-Snake-Game/src/enemy.h \
- /usr/include/SDL2/SDL.h \
+ /usr/include/SDL2/SDL.h /usr/include/c++/11/atomic \
+ /usr/include/c++/11/bits/atomic_base.h \
+ /usr/include/c++/11/bits/atomic_lockfree_defines.h \
+ /usr/include/c++/11/thread /usr/include/c++/11/bits/std_thread.h \
+ /usr/include/c++/11/bits/refwrap.h /usr/include/c++/11/bits/unique_ptr.h \
+ /usr/include/c++/11/bits/this_thread_sleep.h \
  /home/tinghao/Documents/Udacity\ C++/CppND-Capstone-Snake-Game/src/game.h \
  /usr/include/c++/11/random /usr/include/c++/11/bits/random.h \
  /usr/include/c++/11/bits/uniform_int_dist.h \
@@ -309,11 +314,6 @@ CMakeFiles/SnakeGame.dir/src/controller.cpp.o: \
  /usr/include/c++/11/bits/random.tcc /usr/include/c++/11/numeric \
  /usr/include/c++/11/bits/stl_numeric.h /usr/include/c++/11/bit \
  /usr/include/c++/11/pstl/glue_numeric_defs.h \
- /usr/include/c++/11/pstl/execution_defs.h /usr/include/c++/11/atomic \
- /usr/include/c++/11/bits/atomic_base.h \
- /usr/include/c++/11/bits/atomic_lockfree_defines.h \
- /usr/include/c++/11/thread /usr/include/c++/11/bits/std_thread.h \
- /usr/include/c++/11/bits/refwrap.h /usr/include/c++/11/bits/unique_ptr.h \
- /usr/include/c++/11/bits/this_thread_sleep.h \
+ /usr/include/c++/11/pstl/execution_defs.h \
  /home/tinghao/Documents/Udacity\ C++/CppND-Capstone-Snake-Game/src/controller.h \
  /home/tinghao/Documents/Udacity\ C++/CppND-Capstone-Snake-Game/src/renderer.h

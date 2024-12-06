@@ -2,6 +2,9 @@
 #define ENEMY_H
 
 #include <SDL2/SDL.h>
+#include <mutex>
+#include <atomic>
+#include <thread>
 
 class Snake;  // Forward declaration of Snake class
 
@@ -12,7 +15,7 @@ public:
     ~Enemy();
 
     // Move the enemy AI (random movement for this example)
-    void MoveAI();
+    void MoveAI(std::atomic<bool>& game_running);
 
     // Getters for enemy position
     int GetX() const;
@@ -27,6 +30,10 @@ private:
     int x, y;  // Position of the enemy on the grid
     Snake& snake;
     float speed;  // Speed of the enemy
+    mutable std::mutex position_mutex;  // Mutex to protect position updates
+
+    // Internal method for random movement
+    void UpdatePosition();
 };
 
 #endif // ENEMY_H

@@ -16,8 +16,10 @@ Enemy::~Enemy() {
     // Empty destructor if no special cleanup is needed
 }
 
-// AI movement for the enemy (for now it's random movement)
-void Enemy::MoveAI() {
+// Internal method to update enemy position
+void Enemy::UpdatePosition() {
+    std::lock_guard<std::mutex> lock(position_mutex);
+
     // Simple random movement (left, right, up, down)
     x += rand() % 3 - 1;  // Random X move (-1, 0, or 1)
     y += rand() % 3 - 1;  // Random Y move (-1, 0, or 1)
@@ -29,14 +31,36 @@ void Enemy::MoveAI() {
     if (y >= snake.GetGridHeight()) y = snake.GetGridHeight() - 1;
 }
 
+
+// Continuous AI movement method
+void Enemy::MoveAI(std::atomic<bool>& game_running) {
+    while (game_running.load()) {
+        // Move the enemy
+        UpdatePosition();
+        
+        // Sleep to control movement speed
+        // Adjust the sleep duration based on the enemy's speed
+        std::this_thread::sleep_for(std::chrono::milliseconds(
+            static_cast<int>(1000 / (speed * 2))  // Inversely proportional to speed
+        ));
+    }
+}
+
 // Increase the enemy's speed (called when the score increases)
 void Enemy::IncreaseSpeed() {
-    speed += 0.001f;  // Increase the speed incrementally
+    std::lock_guard<std::mutex> lock(position_mutex);
+    speed *= 1.1f;  // Increase the speed incrementally
 }
 
 float Enemy::GetSpeed() const {
     return speed;
 }
 
-int Enemy::GetX() const { return x; }
-int Enemy::GetY() const { return y; }
+int Enemy::GetX() const { 
+    std::lock_guard<std::mutex> lock(position_mutex);
+    return x; 
+}
+int Enemy::GetY() const {
+    std::lock_guard<std::mutex> lock(position_mutex);
+    return y; 
+}

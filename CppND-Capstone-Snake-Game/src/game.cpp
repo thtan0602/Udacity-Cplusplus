@@ -39,83 +39,84 @@ void Game::Initialize() {
     }
 }
 
-  void Game::Run(Controller &controller, Renderer &renderer,
-                std::size_t target_frame_duration) {
-    Uint32 title_timestamp = SDL_GetTicks();
-    Uint32 frame_start;
-    Uint32 frame_end;
-    int frame_count = 0;
-    int last_score = 0;
+void Game::Run(Controller &controller, Renderer &renderer, std::size_t target_frame_duration) {
+  Uint32 title_timestamp = SDL_GetTicks();
+  Uint32 frame_start;
+  Uint32 frame_end;
+  int frame_count = 0;
+  int last_score = 0;
+  
+  game_running = true; 
+  bool running = true;
+
+  StartGameLogicThread(); // Start game logic thread
+
+  controller.StartInputThread(running, snake, *this);
+
+  Enemy enemy(snake);  // Initialize enemy with the grid size
+
+  // Start enemy thread
+  std::thread enemy_thread(&Enemy::MoveAI, &enemy, std::ref(game_running));
+
+  while (running) {
+    frame_start = SDL_GetTicks();
+
+    // Input, Update, Render - the main game loop.
+    controller.HandleInput(running, snake, *this);
+
+    Update();
     
-    game_running = true; 
-    bool running = true;
-
-    StartGameLogicThread();
-
-    controller.StartInputThread(running, snake, *this);
-
-    Enemy enemy(snake);  // Initialize enemy with the grid size
-
-    while (running) {
-      frame_start = SDL_GetTicks();
-
-      // Input, Update, Render - the main game loop.
-      controller.HandleInput(running, snake, *this);
-      Update();
-      
-      // Move the enemy
-      enemy.MoveAI();
-
-      SDL_Point current_head_cell = {static_cast<int>(snake.head_x), static_cast<int>(snake.head_y)};
-      
-      // Check for collision with enemy (snake dies)
-      if (snake.HasCollidedWithEnemy(current_head_cell, enemy)) {
-          game_running = false;  // Snake dies, game ends
-          std::cout << "Game Over! You hit the enemy!" << std::endl;
-          snake.alive = false;
-      }
-
-      // If the snake's score has increased, increase the enemy's speed
-      if (score > last_score) {
-          enemy.IncreaseSpeed();
-          last_score = score;  // Update the last score
-      }
-      
-      renderer.Render(snake, food, enemy);
-
-      frame_end = SDL_GetTicks();
-      frame_count++;
-
-      // After every second, update the window title with the frame count
-      if (frame_end - title_timestamp >= 1000) {
-        // Calculate frames per second
-        renderer.UpdateWindowTitle(score, frame_count);
-        frame_count = 0;  // Reset frame count
-        title_timestamp = frame_end;  // Reset timestamp to current time
-      }
-
-      // If the time for this frame is too small (i.e., frame_duration is
-      // smaller than the target ms_per_frame), delay the loop to
-      // achieve the correct frame rate.
-      int frame_duration = frame_end - frame_start;  // Calculate how long this frame took
-      int delay_time = target_frame_duration - frame_duration;  // How long to delay
-
-      if (delay_time > 0) {
-        SDL_Delay(delay_time);  // Delay to maintain the target frame rate
-      }
+    SDL_Point current_head_cell = {static_cast<int>(snake.head_x), static_cast<int>(snake.head_y)};
+    
+    // Check for collision with enemy (snake dies)
+    if (snake.HasCollidedWithEnemy(current_head_cell, enemy)) {
+        game_running = false;  // Snake dies, game ends
+        std::cout << "Game Over! You hit the enemy!" << std::endl;
+        snake.alive = false;
     }
 
-    // Clean up game logic thread when quitting
-    game_running = false;
+    // If the snake's score has increased, increase the enemy's speed
+    if (score > last_score) {
+        enemy.IncreaseSpeed();
+        last_score = score;  // Update the last score
+    }
+    
+    renderer.Render(snake, food, enemy);
 
-    if (game_logic_thread.joinable()) {
-      game_logic_thread.join();  // Ensure the thread finishes properly
+    frame_end = SDL_GetTicks();
+    frame_count++;
+
+    // After every second, update the window title with the frame count
+    if (frame_end - title_timestamp >= 1000) {
+      renderer.UpdateWindowTitle(score, frame_count);
+      frame_count = 0;  // Reset frame count
+      title_timestamp = frame_end;  // Reset timestamp to current time
     }
 
-    // Call SaveGameState when quitting
-    std::string save_file = "save_game.dat";
-    SaveGameState(save_file);
+    int frame_duration = frame_end - frame_start;  // Calculate how long this frame took
+    int delay_time = target_frame_duration - frame_duration;  // How long to delay
+
+    if (delay_time > 0) {
+      SDL_Delay(delay_time);  // Delay to maintain the target frame rate
+    }
   }
+
+  // Clean up game logic thread when quitting
+  game_running = false;
+
+  if (game_logic_thread.joinable()) {
+    game_logic_thread.join();  // Ensure the thread finishes properly
+  }
+
+  // Join the enemy thread
+  if (enemy_thread.joinable()) {
+      enemy_thread.join(); // Ensure the enemy thread finishes
+  }
+
+  // Call SaveGameState when quitting
+  std::string save_file = "save_game.dat";
+  SaveGameState(save_file);
+}
 
 void Game::PlaceFood() {
   int x, y;
